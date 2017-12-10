@@ -53,7 +53,7 @@ struct Dinic {
 		memset(vst,0,sizeof(vst));
 		memset(dist,0,sizeof(dist));
 		queue<int>Q;
-		Q.push(t); //·´Ïò²ã´ÎÍ¼
+		Q.push(t); //reversed
 		vst[t]=1;
 		while(!Q.empty()) {
 			int Now=Q.front();
