@@ -101,8 +101,8 @@ struct ScapeGoat_Tree {
 		if(ls(index)&&rs(index)) {
 			int pre=ls(index);
 			while(rs(pre))pre=rs(pre);
-			val(index)=val(pre); //Ç°Çý¸´ÖÆ
-			index=pre; //É¾³ýÇ°Çý
+			val(index)=val(pre); //Ã‡Â°Ã‡Ã½Â¸Â´Ã–Ã†
+			index=pre; //Ã‰Â¾Â³Ã½Ã‡Â°Ã‡Ã½
 		}
 		int son=ls(index)?ls(index):rs(index),side=checkson(index);
 		tree[fa(index)].child[side]=son;
