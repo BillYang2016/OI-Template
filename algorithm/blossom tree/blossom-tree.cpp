@@ -66,14 +66,14 @@ int Augument(int s) {
 	memset(Type,-1,sizeof(Type));
 	Q=queue<int>();
 	Type[s]=0;
-	Q.push(s); //only type S in queue
+	Q.push(s); //only type "out" in queue
 	while(!Q.empty()) {
 		int Now=Q.front();
 		Q.pop();
 		for(int Next:edges[Now]) {
 			if(Type[Next]==-1) {
 				pre[Next]=Now;
-				Type[Next]=1; //type T marked
+				Type[Next]=1; //type "in" marked
 				if(!match[Next]) {
 					for(int to=Next,from=Now; to; from=pre[to]) {
 						match[to]=from;
