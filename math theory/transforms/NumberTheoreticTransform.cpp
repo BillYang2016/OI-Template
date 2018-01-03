@@ -102,16 +102,16 @@ struct NumberTheoreticTransform {
 		LL x=inv(n);
 		for(int i=0; i<n; i++)a[i]=a[i]*x%mod;
 	}
-} fft;
+} ntt;
 
 void Multiply(LL* a1,const int n1,LL* a2,const int n2,LL* ans) {
 	int n=1;
 	while(n<n1+n2)n<<=1; //complement integer
-	fft.init(n);
-	fft.dft(a1);
-	fft.dft(a2);
+	ntt.init(n);
+	ntt.dft(a1);
+	ntt.dft(a2);
 	for(int i=0; i<n; i++)a1[i]=a1[i]*a2[i]%mod;
-	fft.idft(a1);
+	ntt.idft(a1);
 	for(int i=0; i<n1+n2-1; i++)ans[i]=a1[i];
 }
 
