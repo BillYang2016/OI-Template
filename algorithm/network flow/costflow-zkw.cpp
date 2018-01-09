@@ -36,7 +36,7 @@ struct zkw_CostFlow {
 	vector<Edge>edges;
 	vector<int>G[maxn];
 	bool inque[maxn],vst[maxn];
-	int dist[maxn],path[maxn];
+	int dist[maxn];
 	int flow,cost;
 	void init(int n) {
 		this->n=n;
