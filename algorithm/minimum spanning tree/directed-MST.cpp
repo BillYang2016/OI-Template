@@ -37,7 +37,7 @@ double Directed_MST(int n,vector<Edge>edges,int root) {
 	static double in[maxn];
 	static int id[maxn],pre[maxn],vst[maxn];
 	while(true) {
-		//ÕÒ×îĞ¡Èë±ß
+		//æ‰¾æœ€å°å…¥è¾¹
 		for(int i=1; i<=n; i++)in[i]=1e18;
 		for(int i=0; i<edges.size(); i++) {
 			Edge& e=edges[i]; 
@@ -50,9 +50,9 @@ double Directed_MST(int n,vector<Edge>edges,int root) {
 		}
 		for(int i=1; i<=n; i++) {
 			if(i==root)continue;
-			if(in[i]==1e18)return -1; //ÎŞ½â
+			if(in[i]==1e18)return -1; //æ— è§£
 		}
-		//ÕÒ»·
+		//æ‰¾ç¯
 		memset(id,0,sizeof(id));
 		memset(vst,0,sizeof(vst));
 		int cnt=0;
@@ -60,13 +60,13 @@ double Directed_MST(int n,vector<Edge>edges,int root) {
 		for(int i=1; i<=n; i++) {
 			ans+=in[i];
 			int now;
-			for(now=i; vst[now]!=i&&!id[now]&&now!=root; now=pre[now])vst[now]=i; //ÕÒ»·
-			if(now!=root&&!id[now]) { //Ëõµã
+			for(now=i; vst[now]!=i&&!id[now]&&now!=root; now=pre[now])vst[now]=i; //æ‰¾ç¯
+			if(now!=root&&!id[now]) { //ç¼©ç‚¹
 				id[now]=++cnt;
 				for(int p=pre[now]; p!=now; p=pre[p])id[p]=cnt;
 			}
 		}
-		if(cnt==0)break; //ÎŞ»·
+		if(cnt==0)break; //æ— ç¯
 		for(int i=1; i<=n; i++)
 			if(!id[i])id[i]=++cnt;
 		for(int i=0; i<edges.size(); i++) {
