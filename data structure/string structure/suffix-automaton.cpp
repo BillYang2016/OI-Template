@@ -29,7 +29,7 @@ const int maxn=250005,maxc=26;
 struct SuffixAutomaton {
 	int cnt,root,last;
 	int next[maxn*2],Max[maxn*2],end_pos[maxn*2];
-	int child[maxn*2][maxc];
+	int child[maxn*2][maxc],Bucket[maxn*2],top[maxn*2];
 	SuffixAutomaton() {
 		cnt=0;
 		root=last=newnode(0);
