@@ -33,15 +33,13 @@ int max(int a,int b) {
 
 const int maxn=200005;
 
-struct Tree {
-	int l,r,size;
-	int val,max;
-	Tree() {} 
-	Tree(int _l,int _r,int s,int v,int m):l(_l),r(_r),size(s),val(v),max(m) {}
-};
-
 struct Treap { //root is interface 
-	Tree tree[maxn*100];
+	struct Tree {
+		int l,r,size;
+		int val,max;
+		Tree() {} 
+		Tree(int _l,int _r,int s,int v,int m):l(_l),r(_r),size(s),val(v),max(m) {}
+	} tree[maxn*100];
 	int size;
 #define val(x) tree[x].val
 #define size(x) tree[x].size

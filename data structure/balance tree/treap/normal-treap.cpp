@@ -27,14 +27,12 @@ inline const int Get_Int() {
 const int maxn=100005;
 mt19937 g(rand());
  
-struct Tree {
-	int child[2];
-	int d,val;
-	int size;
-};
- 
 struct Treap {
-	Tree tree[maxn];
+	struct Tree {
+		int child[2];
+		int d,val;
+		int size;
+	} tree[maxn];
 	int size,root;
 	queue<int>Q;
 #define d(x) tree[x].d
