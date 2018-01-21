@@ -32,7 +32,7 @@ const int maxn=131072+5;
 const double pi=acos(-1);
 
 struct FastFourierTransform {
-	int n;
+	int n,rev[maxn];
 	cp omega[maxn],iomega[maxn];
 	
 	void init(int n) {
@@ -41,15 +41,16 @@ struct FastFourierTransform {
 			omega[i]=cp(cos(2*pi/n*i),sin(2*pi/n*i));
 			iomega[i]=conj(omega[i]); //conjugate complex
 		}
-	}
-	
-	void transform(cp* a,cp* omega) {
 		int k=log2(n);
 		for(int i=0; i<n; i++) { //reverse bit position
 			int t=0;
 			for(int j=0; j<k; j++)if(i&(1<<j))t|=(1<<(k-j-1));
 			if(i<t)swap(a[i],a[t]); //no double reversion
 		}
+	}
+	
+	void transform(cp* a,cp* omega) {
+		for(int i=0; i<n; i++)if(i<rev[i])swap(a[i],a[rev[i]]);
 		for(int len=2; len<=n; len*=2) {
 			int mid=len>>1;
 			for(cp* p=a; p!=a+n; p+=len)

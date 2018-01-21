@@ -62,7 +62,7 @@ void find_root(LL x) {
 }
 
 struct NumberTheoreticTransform {
-	int n;
+	int n,rev[maxn];
 	LL omega[maxn],iomega[maxn];
 	
 	void init(int n) {
@@ -73,15 +73,16 @@ struct NumberTheoreticTransform {
 			omega[i]=omega[i-1]*x%mod;
 			iomega[i]=inv(omega[i]);
 		}
-	}
-	
-	void transform(LL* a,LL* omega) {
 		int k=log2(n);
 		for(int i=0; i<n; i++) { //reverse bit position
 			int t=0;
 			for(int j=0; j<k; j++)if(i&(1<<j))t|=(1<<(k-j-1));
-			if(i<t)swap(a[i],a[t]); //no double reversion
+			rev[i]=t; //no double reversion
 		}
+	}
+	
+	void transform(LL* a,LL* omega) {
+		for(int i=0; i<n; i++)if(i<rev[i])swap(a[i],a[rev[i]]);
 		for(int len=2; len<=n; len*=2) {
 			int mid=len>>1;
 			for(LL* p=a; p!=a+n; p+=len)

@@ -28,8 +28,8 @@ const int maxn=250005,maxc=26;
 
 struct SuffixAutomaton {
 	int cnt,root,last;
-	int next[maxn*2],Max[maxn*2],end_pos[maxn*2];
-	int child[maxn*2][maxc],Bucket[maxn*2],top[maxn*2];
+	int next[maxn<<1],Max[maxn<<1],end_pos[maxn<<1];
+	int child[maxn<<1][maxc],Bucket[maxn<<1],top[maxn<<1];
 	SuffixAutomaton() {
 		cnt=0;
 		root=last=newnode(0);
@@ -60,12 +60,12 @@ struct SuffixAutomaton {
 		}
 	}
 	void build(string s) {
-		for(int i=0; i<s.length(); i++)insert(s[i]-'a');
+		for(auto x:s)insert(x-'a');
 	}
 	int lcs(string s) {
 		int ans=0,len=0,p=root;
-		for(int i=0; i<s.length(); i++) {
-			int ch=s[i]-'a';
+		for(auto x:s) {
+			int ch=x-'a';
 			if(child[p][ch])p=child[p][ch],len++;
 			else {
 				while(p&&!child[p][ch])p=next[p];
