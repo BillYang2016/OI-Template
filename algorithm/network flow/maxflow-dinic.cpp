@@ -50,8 +50,7 @@ struct Dinic {
 		G[y].push_back(m-1);
 	}
 	bool bfs() {
-		memset(vst,0,sizeof(vst));
-		memset(dist,0,sizeof(dist));
+		fill(vst+1,vst+n+1,0);
 		queue<int>Q;
 		Q.push(t); //reversed
 		vst[t]=1;
@@ -64,6 +63,7 @@ struct Dinic {
 				if(!vst[Next]&&e.cap>e.flow) { 
 					vst[Next]=1;
 					dist[Next]=dist[Now]+1;
+					if(Next==s)return 1;
 					Q.push(Next);
 				}
 			}

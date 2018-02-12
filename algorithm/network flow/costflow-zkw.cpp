@@ -51,8 +51,8 @@ struct zkw_CostFlow {
 		G[y].push_back(m-1);
 	}
 	bool spfa() {
-		for(int i=1; i<=n; i++)dist[i]=INT_MAX;
-		memset(inque,0,sizeof(inque));
+		fill(inque+1,inque+n+1,0);
+		fill(dist+1,dist+n+1,INT_MAX);
 		dist[t]=0;
 		inque[t]=1;
 		deque<int>Q;
