@@ -27,8 +27,8 @@ inline const int Get_Int() {
 const int maxn=100005;
 
 struct Palindsome_Automaton {
-	int child[maxn][28];
-	int n,size,last,s[maxn],len[maxn],f[maxn],next[maxn];
+	int child[maxn][26];
+	int n,size,last,s[maxn],len[maxn],next[maxn];
 	Palindsome_Automaton() {
 		size=-1;
 		newnode(0); //even
@@ -44,7 +44,7 @@ struct Palindsome_Automaton {
 		len[now]=v;
 		return now;
 	}
-	void insert(int data,int id) {
+	void insert(int data) {
 		s[++n]=data;
 		int p=last;
 		while(s[n-len[p]-1]!=s[n])p=next[p];
@@ -57,8 +57,7 @@ struct Palindsome_Automaton {
 		last=child[p][data];
 	}
 	void build(string s) {
-		int tot=0;
-		for(auto x:s)insert(x-'a',++tot);
+		for(auto x:s)insert(x-'a');
 	}
 };
 
