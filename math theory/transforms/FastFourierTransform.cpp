@@ -34,7 +34,6 @@ const double pi=acos(-1);
 struct FastFourierTransform {
 	int n,rev[maxn];
 	cp omega[maxn],iomega[maxn];
-	
 	void init(int n) {
 		this->n=n;
 		for(int i=0; i<n; i++) {
@@ -48,12 +47,11 @@ struct FastFourierTransform {
 			rev[i]=t;
 		}
 	}
-	
-	void transform(cp* a,cp* omega) {
+	void transform(cp *a,cp *omega) {
 		for(int i=0; i<n; i++)if(i<rev[i])swap(a[i],a[rev[i]]); //no double reversion
 		for(int len=2; len<=n; len*=2) {
 			int mid=len>>1;
-			for(cp* p=a; p!=a+n; p+=len)
+			for(cp *p=a; p!=a+n; p+=len)
 				for(int i=0; i<mid; i++) {
 					cp t=omega[n/len*i]*p[mid+i];
 					p[mid+i]=p[i]-t;
@@ -61,12 +59,10 @@ struct FastFourierTransform {
 				}
 		}
 	}
-
-	void dft(cp* a) {
+	void dft(cp *a) {
 		transform(a,omega);
 	}
-
-	void idft(cp* a) {
+	void idft(cp *a) {
 		transform(a,iomega);
 		for(int i=0; i<n; i++)a[i]/=n;
 	}
