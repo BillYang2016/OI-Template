@@ -8,6 +8,7 @@
 #include<cstdio>
 #include<cmath>
 #include<queue>
+#include<stack>
 using namespace std;
 
 inline const int Get_Int() {
