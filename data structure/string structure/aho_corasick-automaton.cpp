@@ -24,73 +24,59 @@ inline const int Get_Int() {
 	return num*bj;
 }
 
-const int maxn=200005;
-
-struct Tree {
-	int child[26],fail,next,cnt,sum;
-};
+const int maxn=500005;
 
 struct Aho_Corasick_Automaton {
-	int root,cnt;
-	Tree tree[maxn];
-	#define ch(x,i) tree[x].child[i]
-	#define fail(x) tree[x].fail
-	
-	Aho_Corasick_Automaton() {
-		init();
-	}
-	
+	struct Tree {
+		int child[26];
+		int fail,cnt;
+		void clear() {fill(child,child+26,0);fail=cnt=0;}
+	} tree[maxn];
+	int cnt;
+#define ch(x,i) tree[x].child[i]
+#define fail(x) tree[x].fail
+	Aho_Corasick_Automaton() {init();}
 	void init() {
-		root=cnt=1;
-		memset(tree,0,sizeof(tree));
+		tree[cnt=0].clear();
 	}
-	
-	int insert(string s) {
-		int now=root;
-		for(int i=0; i<s.length(); i++) {
-			int j=s[i]-'a';
-			if(!ch(now,j))ch(now,j)=++cnt;
+	int newnode() {
+		tree[++cnt].clear();
+		return cnt;
+	}
+	void insert(string s) {
+		int now=0;
+		for(char x:s) {
+			int j=x-'a';
+			if(!ch(now,j))ch(now,j)=newnode();
 			now=ch(now,j);
 		}
 		tree[now].cnt++;
-		return now;
 	}
-	
 	void buildfail() {
-		queue<int>Q;
-		Q.push(root);
+		queue<int> Q;
+		Q.push(0);
 		while(!Q.empty()) {
 			int now=Q.front();
 			Q.pop();
 			for(int i=0; i<26; i++) {
-				int& next=ch(now,i);
-				if(!next) { //trie graph
-					next=ch(fail(now),i)?ch(fail(now),i):root;
-					continue;
-				}
-				Q.push(next);
-				int p=fail(now);
-				while(p&&!ch(p,i))p=fail(p);
-				if(p)fail(next)=ch(p,i);
-				else fail(next)=root;
-				tree[next].next=tree[fail(next)].cnt?fail(next):tree[fail(next)].next;
+				int &next=ch(now,i);
+				if(next) {
+					if(now)fail(next)=ch(fail(now),i);
+					Q.push(next);
+				} else next=ch(fail(now),i);
 			}
 		}
 	}
-	
 	int match(string s) {
-		int now=root,ans=0;
-		for(int i=0; i<s.length(); i++) {
-			int j=s[i]-'a';
+		int now=0,ans=0;
+		for(auto x:s) {
+			int j=x-'a';
 			now=ch(now,j);
-			for(int j=now; j; j=tree[j].next) {
-				tree[j].sum+=tree[j].cnt;
-				tree[j].cnt=0;
-			}
+			for(int j=now; j; j=fail(j))ans+=tree[j].cnt,tree[j].cnt=0;
 		}
 		return ans;
 	}
-};
+} acam;
 
 int main() {
 	
