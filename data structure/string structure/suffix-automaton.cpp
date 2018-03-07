@@ -26,25 +26,22 @@ inline const int Get_Int() {
 
 const int maxn=250005,maxc=26;
 
-struct SuffixAutomaton {
+struct Suffix_Automaton {
 	int cnt,root,last;
-	int next[maxn<<1],Max[maxn<<1],end_pos[maxn<<1];
-	int child[maxn<<1][maxc],Bucket[maxn<<1],top[maxn<<1];
-	SuffixAutomaton() {
-		cnt=0;
-		root=last=newnode(0);
-	}
+	int child[maxn<<1][maxc],next[maxn<<1],Max[maxn<<1];
+	int buc[maxn<<1],top[maxn],end_pos[maxn];
+	Suffix_Automaton() {init();}
+	void init() {cnt=0;root=last=newnode(0);}
 	int newnode(int val) {
 		cnt++;
-		next[cnt]=end_pos[cnt]=0;
+		next[cnt]=0;
 		Max[cnt]=val;
-		memset(child[cnt],0,sizeof(child[cnt]));
+		fill(child[cnt],child[cnt]+maxc,0);
 		return cnt;
 	}
 	void insert(int data) {
 		int p=last,u=newnode(Max[last]+1);
-		last=u;
-		end_pos[u]=1; 
+		end_pos[last=u]=1;
 		for(; p&&!child[p][data]; p=next[p])child[p][data]=u;
 		if(!p)next[u]=root;
 		else {
@@ -62,29 +59,24 @@ struct SuffixAutomaton {
 	void build(string s) {
 		for(auto x:s)insert(x-'a');
 	}
-	int lcs(string s) {
+	int run(string s) {
 		int ans=0,len=0,p=root;
-		for(auto x:s) {
+		for(int x:s) {
 			int ch=x-'a';
 			if(child[p][ch])p=child[p][ch],len++;
 			else {
 				while(p&&!child[p][ch])p=next[p];
-				if(!p) {
-					len=0;
-					p=root;
-				} else {
-					len=Max[p]+1;
-					p=child[p][ch];
-				}
+				if(!p) {len=0,p=root;}
+				else {len=Max[p]+1,p=child[p][ch];}
 			}
 			ans=max(ans,len);
 		}
 		return ans;
 	}
 	void topsort() {
-		for(int i=1; i<=cnt; i++)Bucket[Max[i]]++;
-		for(int i=1; i<=cnt; i++)Bucket[i]+=Bucket[i-1];
-		for(int i=1; i<=cnt; i++)top[Bucket[Max[i]]--]=i;
+		for(int i=1; i<=cnt; i++)buc[Max[i]]++;
+		for(int i=1; i<=cnt; i++)buc[i]+=buc[i-1];
+		for(int i=1; i<=cnt; i++)top[buc[Max[i]]--]=i;
 	}
 	void get_end_pos() {
 		topsort();
