@@ -9,8 +9,6 @@
 #include<queue>
 using namespace std;
 
-//notice: I didn't test this template,maybe there're bugs inside.
-
 inline const int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
