@@ -1,122 +1,77 @@
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<cstring>
-#include<cstdlib>
-#include<climits>
-#include<vector>
-#include<cstdio>
-#include<cmath>
-#include<queue>
-#include<stack>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-inline const int Get_Int() {
+inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
-	while(x<'0'||x>'9') {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(x>='0'&&x<='9') {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
 
-//for point value
-
-const int maxn=100005;
+const int maxn=300005;
 
 struct Tree {
-	int father,child[2];
+	int child[2],fa;
 	bool rev;
-	int max,val,sum;
+	int val,sum;
+	Tree(int v=0):val(v),sum(v) {child[0]=child[1]=fa=rev=0;}
 };
 
 struct Link_Cut_Tree {
 	Tree tree[maxn];
-	stack<int>S;
-	#define fa(x) tree[x].father
-	#define ls(x) tree[x].child[0]
-	#define rs(x) tree[x].child[1]
-	#define rev(x) tree[x].rev
-	bool isroot(int index) {
-		return ls(fa(index))!=index&&rs(fa(index))!=index;
+	int top,S[maxn];
+#define fa(x) tree[x].fa
+#define ls(x) tree[x].child[0]
+#define rs(x) tree[x].child[1]
+#define rev(x) tree[x].rev
+	bool isroot(int x) {return ls(fa(x))!=x&&rs(fa(x))!=x;}
+	bool checkson(int x) {return rs(fa(x))==x;}
+	void reverse(int x) {swap(ls(x),rs(x));rev(x)^=1;}
+	void push_down(int x) {
+		if(!rev(x))return;
+		reverse(ls(x)),reverse(rs(x));
+		rev(x)=0;
 	}
-	bool checkson(int index) {
-		return rs(fa(index))==index;
+	void push_up(int x) {tree[x].sum=tree[ls(x)].sum+tree[rs(x)].sum+tree[x].val;}
+	void rotate(int x) {
+		int f=fa(x),g=fa(f),side=checkson(x);
+		if(!isroot(f))tree[g].child[checkson(f)]=x;
+		tree[f].child[side]=tree[x].child[!side],fa(tree[f].child[side])=f;
+		fa(f)=x,tree[x].child[!side]=f;
+		fa(x)=g;
+		push_up(f),push_up(x);
 	}
-	void push_down(int index) {
-		if(!rev(index))return;
-		swap(ls(index),rs(index));
-		rev(ls(index))^=1;
-		rev(rs(index))^=1;
-		rev(index)=0;
-	}
-	void push_up(int index) {
-		tree[index].max=max(max(tree[ls(index)].max,tree[rs(index)].max),tree[index].val);
-		tree[index].sum=tree[ls(index)].sum+tree[rs(index)].sum+tree[index].val;
-	}
-	void rotate(int index) {
-		int father=fa(index),grand=fa(father),side=checkson(index);
-		if(!isroot(father))tree[grand].child[checkson(father)]=index;
-		tree[father].child[side]=tree[index].child[side^1];
-		fa(tree[father].child[side])=father;
-		fa(father)=index;
-		tree[index].child[side^1]=father;
-		fa(index)=grand;
-		push_up(father);
-		push_up(index);
-	}
-	void splay(int index) {
-		S.push(index);
-		for(int i=index; !isroot(i); i=fa(i))S.push(fa(i));
-		while(!S.empty())push_down(S.top()),S.pop();
-		for(int father; !isroot(index); rotate(index)) {
-			father=fa(index);
-			if(!isroot(father))rotate(checkson(index)==checkson(father)?father:index);
+	void splay(int x) {
+		S[++top]=x;
+		for(int i=x; !isroot(i); i=fa(i))S[++top]=fa(i);
+		while(top)push_down(S[top--]);
+		for(int f; !isroot(x); rotate(x)) {
+			f=fa(x);
+			if(!isroot(f))rotate(checkson(x)==checkson(f)?f:x);
 		}
 	}
-	void access(int index) {
-		for(int son=0; index; son=index,index=fa(index)) {
-			splay(index);
-			rs(index)=son;
-			push_up(index);
+	void access(int x) {
+		for(int son=0; x; son=x,x=fa(x)) {
+			splay(x);
+			rs(x)=son;
+			push_up(x);
 		}
 	}
-	void reverse(int index) {
-		access(index);
-		splay(index);
-		rev(index)^=1;
+	void make_root(int x) {access(x);splay(x);reverse(x);}
+	void split(int x,int y) {make_root(x);access(y);splay(y);}
+	void link(int x,int y) {make_root(x);fa(x)=y;} //y->x
+	void cut(int x,int y) {split(x,y);ls(y)=fa(x)=0;}
+	int pre(int x) {x=ls(x);while(rs(x))x=rs(x);return x;}
+	void modify(int x,int v) {splay(x);tree[x].val=v;push_up(x);}
+	int get_root(int x) {
+		access(x);
+		splay(x);
+		while(ls(x))x=ls(x);
+		return x;
 	}
-	void link(int x,int y) {
-		reverse(x);
-		fa(x)=y;
-	}
-	void split(int x,int y) {
-		reverse(x);
-		access(y);
-		splay(y);
-	} 
-	void cut(int x,int y) { 
-		split(x,y);
-		ls(y)=fa(x)=0;
-	}
-	void modify(int index,int val) {
-		splay(index);
-		tree[index].val=val;
-		push_up(index);
-	}
-	int get_root(int index) {
-		access(index);
-		splay(index);
-		int u=index;
-		while(ls(u))u=ls(u);
-		return u;
-	}
-};
+} lct;
 
 int main() {
 	
