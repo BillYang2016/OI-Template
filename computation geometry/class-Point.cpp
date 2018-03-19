@@ -19,7 +19,7 @@ int dcmp(double x) {
 
 struct Point {
 	double x,y;
-	Point(double _x=0,double _y=0):x(_x),y(_y) {}
+	Point(double x=0,double y=0):x(x),y(y) {}
 	Point operator + (const Point &a) {return Point(x+a.x,y+a.y);}
 	Point operator - (const Point &a) {return Point(a.x-x,a.y-y);} //attention reversed!
 	Point operator * (double a) {return Point(x*a,y*a);}
@@ -29,7 +29,6 @@ struct Point {
 	double length() {return sqrt(x*x+y*y);}
 	Point rotate(double rad) {return Point(x*cos(rad)-y*sin(rad),x*sin(rad)+y*cos(rad));} //anticlockwise
 	Point normal(Point a) {return Point(-a.y/a.length(),a.x/a.length());} //normal vector
-	
 };
 
 typedef Point Vector; //only for code convenience
