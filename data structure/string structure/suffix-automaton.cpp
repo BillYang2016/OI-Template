@@ -29,7 +29,7 @@ const int maxn=250005,maxc=26;
 struct Suffix_Automaton {
 	int cnt,root,last;
 	int child[maxn<<1][maxc],next[maxn<<1],Max[maxn<<1];
-	int buc[maxn<<1],top[maxn],end_pos[maxn];
+	int buc[maxn<<1],top[maxn<<1],end_pos[maxn<<1];
 	Suffix_Automaton() {init();}
 	void init() {cnt=0;root=last=newnode(0);}
 	int newnode(int val) {
@@ -56,9 +56,7 @@ struct Suffix_Automaton {
 			}
 		}
 	}
-	void build(string s) {
-		for(auto x:s)insert(x-'a');
-	}
+	void build(string s) {for(auto x:s)insert(x-'a');}
 	int run(string s) {
 		int ans=0,len=0,p=root;
 		for(int x:s) {
