@@ -45,9 +45,7 @@ struct FastFourierTransform {
 				}
 		}
 	}
-	void dft(vector<cp>& a) {
-		transform(a,omega);
-	}
+	void dft(vector<cp>& a) {transform(a,omega);}
 	void idft(vector<cp>& a) {
 		transform(a,iomega);
 		for(int i=0; i<n; i++)a[i]/=n;
@@ -55,6 +53,7 @@ struct FastFourierTransform {
 };
 
 const int BASE=100000000,WIDTH=8,MUL_MAX=2000000; //MUL_MAX根据常数确定开关 
+
 int Pow[(int)log2(BASE)+5];
 
 void accelerate() {
@@ -241,31 +240,12 @@ struct BigInteger {
 	LL operator % (const LL &b) {LL d=0;Divide(*this,b,d);return d;}
 	void operator %= (const LL &b) {*this=*this%b;}
 	//±
-	BigInteger operator + () {
-		return *this;
-	}
-	BigInteger operator - () {
-		BigInteger a=*this;
-		return a;
-	}
-	BigInteger operator ++ () {
-		*this+=1;
-		return *this;
-	}
-	const BigInteger operator ++ (int) {
-		BigInteger tmp=*this;
-		*this=*this+1;
-		return tmp;
-	}
-	BigInteger operator -- () {
-		*this-=1;
-		return *this;
-	}
-	const BigInteger operator -- (int) {
-		BigInteger tmp=*this;
-		*this=*this-1;
-		return tmp;
-	}
+	BigInteger operator + () {return *this;}
+	BigInteger operator - () {return *this;}
+	BigInteger operator ++ () {*this+=1;return *this;}
+	const BigInteger operator ++ (int) {BigInteger tmp=*this;*this=*this+1;return tmp;}
+	BigInteger operator -- () {	*this-=1;return *this;}
+	const BigInteger operator -- (int) {BigInteger tmp=*this;*this=*this-1;return tmp;}
 	friend istream& operator >> (istream& input,BigInteger& x) {
 		string s;
 		if(!(input>>s))return input;
