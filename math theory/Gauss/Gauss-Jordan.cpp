@@ -12,21 +12,23 @@ inline int Get_Int() {
 
 const double eps=1e-6;
 
-int n;
+int n,m;
 double a[105][105];
 
-void Gauss_Jordan(int n) {
-	for(int i=1; i<=n; i++) {
-		int row=i;
+void Gauss_Jordan(int n,int m) {
+	int now=0;
+	for(int i=1; i<=m; i++) {
+		int row=now+1;
 		for(; row<=n; row++)if(fabs(a[row][i])>eps)break;
 		if(row>n)continue;
-		for(int j=1; j<=n+1; j++)swap(a[i][j],a[row][j]);
-		double t=a[i][i];
-		for(int j=1; j<=n+1; j++)a[i][j]/=t;
+		now++;
+		for(int j=1; j<=m+1; j++)swap(a[now][j],a[row][j]);
+		double t=a[now][i];
+		for(int j=1; j<=m+1; j++)a[now][j]/=t;
 		for(int j=1; j<=n; j++)
-			if(j!=i) {
+			if(j!=now) {
 				t=a[j][i];
-				for(int k=1; k<=n+1; k++)a[j][k]-=t*a[i][k];
+				for(int k=1; k<=m+1; k++)a[j][k]-=t*a[now][k];
 			}
 	}
 }
