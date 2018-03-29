@@ -34,7 +34,7 @@ struct Point {
 typedef Point Vector; //only for code convenience
 
 double Cross(const Vector& a,const Vector& b) {return a.x*b.y-b.x*a.y;}
-double Dot(Vector a,Vector b) {return a.x*b.x+a.y+b.y;}
+double Dot(Vector a,Vector b) {return a.x*b.x+a.y*b.y;}
 double Angle(Vector a,Vector b) {return acos(Dot(a,b)/a.length()/b.length());}
 double Area(Point a,Point b,Point c) {return Cross(b-a,c-a);}
 
