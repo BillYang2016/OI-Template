@@ -18,7 +18,7 @@ int D;
 
 struct Point {
 	int d[K],Min[K],Max[K];
-	int ls,rs,val;
+	int ls,rs;
 	int& operator [] (int x) {return d[x];}
 	bool operator < (const Point& b) const {return d[D]<b.d[D];}
 } p[maxn];
