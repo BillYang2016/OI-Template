@@ -37,13 +37,8 @@ struct Aho_Corasick_Automaton {
 #define ch(x,i) tree[x].child[i]
 #define fail(x) tree[x].fail
 	Aho_Corasick_Automaton() {init();}
-	void init() {
-		tree[cnt=0].clear();
-	}
-	int newnode() {
-		tree[++cnt].clear();
-		return cnt;
-	}
+	void init() {tree[cnt=0].clear();}
+	int newnode() {tree[++cnt].clear();return cnt;}
 	void insert(string s) {
 		int now=0;
 		for(char x:s) {
