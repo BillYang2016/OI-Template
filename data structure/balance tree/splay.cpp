@@ -1,92 +1,61 @@
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<cstring>
-#include<cstdlib>
-#include<climits>
-#include<vector>
-#include<cstdio>
-#include<cmath>
-#include<queue>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-inline const int Get_Int() {
+inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
-	while(x<'0'||x>'9') {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(x>='0'&&x<='9') {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
 
 const int maxn=200005;
 
-struct Tree {
-	int child[2],father;
-	int key,size,cnt;
-	Tree() {}
-	Tree(int l,int r,int fa,int k,int s,int c):father(fa),key(k),size(s),cnt(c) {
-		child[0]=l;
-		child[1]=r;
-	}
-};
-
 struct Splay {
+	struct Tree {
+		int child[2],father;
+		int key,size,cnt;
+		Tree(int l=0,int r=0,int fa=0,int k=0,int s=0):father(fa),key(k),size(s),cnt(s) {child[0]=l,child[1]=r;}
+	} tree[maxn];
 	int size,root;
-	Tree tree[maxn];
-	#define ls(x) tree[x].child[0]
-	#define rs(x) tree[x].child[1]
-	#define fa(x) tree[x].father
-	#define cnt(x) tree[x].cnt
-	#define val(x) tree[x].key
-	#define size(x) tree[x].size
+#define ls(x) tree[x].child[0]
+#define rs(x) tree[x].child[1]
+#define fa(x) tree[x].father
+#define cnt(x) tree[x].cnt
+#define val(x) tree[x].key
+#define size(x) tree[x].size
 	Splay() {
-		tree[++size]=Tree(0,2,0,-INT_MAX,0,0);
-		tree[++size]=Tree(0,0,1,INT_MAX,0,0);
+		tree[++size]=Tree(0,2,0,INT_MIN,0);
+		tree[++size]=Tree(0,0,1,INT_MAX,0);
 		root=size;
 	}
-	void clear(int index) {
-		tree[index]=Tree(0,0,0,0,0,0);
+	void clear(int x) {tree[x]=0;}
+	bool checkson(int x) {return rs(fa(x))==x;}
+	void push_up(int x) {if(x)size(x)=size(ls(x))+size(rs(x))+cnt(x);}
+	void rotate(int x) {
+		int f=fa(x),g=fa(f),side=checkson(x);
+		if(g)tree[g].child[checkson(f)]=x;
+		tree[f].child[side]=tree[x].child[side^1],fa(tree[f].child[side])=f;
+		fa(f)=x,tree[x].child[side^1]=f;
+		fa(x)=g;
+		push_up(f),push_up(x);
 	}
-	bool checkson(int index) {
-		return rs(fa(index))==index;
-	}
-	void push_up(int index) {
-		if(!index)return;
-		size(index)=size(ls(index))+size(rs(index))+cnt(index);
-	}
-	void rotate(int index) {
-		int father=fa(index),grand=fa(father),side=checkson(index);
-		if(grand)tree[grand].child[checkson(father)]=index;
-		tree[father].child[side]=tree[index].child[side^1];
-		fa(tree[father].child[side])=father;
-		fa(father)=index;
-		tree[index].child[side^1]=father;
-		fa(index)=grand;
-		push_up(father);
-		push_up(index);
-	}
-	void splay(int index,int target=0) {
-		for(int father; (father=fa(index))!=target; rotate(index))
-			if(fa(father)!=target)rotate(checkson(index)==checkson(father)?father:index);
-		if(target==0)root=index;
+	void splay(int x,int tar=0) {
+		for(int f; (f=fa(x))!=tar; rotate(x))if(fa(f)!=tar)rotate(checkson(x)==checkson(f)?f:x);
+		if(tar==0)root=x;
 	}
 	int insert(int v) {
-		int now=root,father=0;
+		int now=root,fa=0;
 		while(now&&val(now)!=v) {
-			father=now;
-			size(father)++;
+			fa=now;
+			size(fa)++;
 			now=tree[now].child[val(now)<v];
 		}
 		if(now)cnt(now)++,size(now)++;
 		else {
-			tree[now=++size]=Tree(0,0,father,v,1,1);
-			if(father)tree[father].child[val(father)<v]=now;
+			tree[now=++size]=Tree(0,0,fa,v,1);
+			if(fa)tree[fa].child[val(fa)<v]=now;
 		}
 		splay(now);
 		return now;
@@ -95,32 +64,18 @@ struct Splay {
 		int now=root,pre=pre_suc(0),suc=pre_suc(1);
 		splay(pre);
 		splay(suc,pre);
-		if(cnt(now)>1) {
-			cnt(now)--;
-			size(now)--;
-		} else {
-			clear(now);
-			ls(suc)=0;
-		}
+		if(cnt(now)>1) {cnt(now)--;size(now)--;}
+		else {clear(now);ls(suc)=0;}
 		size(pre)--;
 		size(suc)--;
 	}
-	void delete_index(int index) {
-		splay(index);
-		remove();
-	}
-	void delete_val(int v) {
-		if(rank(v)==-1)return;
-		remove();
-	}
+	void delete_index(int x) {splay(x);remove();}
+	void delete_val(int v) {if(rank(v)==-1)return;remove();}
 	int rank(int v) {
 		int now=root,ans=0;
 		while(now>0&&val(now)!=v) {
 			if(v<val(now))now=ls(now);
-			else {
-				ans+=size(ls(now))+cnt(now);
-				now=rs(now);
-			}
+			else {ans+=size(ls(now))+cnt(now);now=rs(now);}
 		}
 		if(now<=0)return -1;
 		ans+=size(ls(now));

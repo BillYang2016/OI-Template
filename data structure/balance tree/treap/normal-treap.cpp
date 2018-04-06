@@ -1,26 +1,12 @@
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<cstring>
-#include<cstdlib>
-#include<climits>
-#include<vector>
-#include<cstdio>
-#include<cmath>
-#include<queue>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-inline const int Get_Int() {
+inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
-	while(x<'0'||x>'9') {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(x>='0'&&x<='9') {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
 
@@ -29,22 +15,17 @@ mt19937 g(rand());
  
 struct Treap {
 	struct Tree {
-		int child[2];
+		int child[2],size;
 		int d,val;
-		int size;
 	} tree[maxn];
 	int size,root;
-	queue<int>Q;
+	queue<int> Q;
 #define d(x) tree[x].d
 #define val(x) tree[x].val
 #define ls(x) tree[x].child[0]
 #define rs(x) tree[x].child[1]
-#define root(x) tree[x].root
 #define size(x) tree[x].size
-	void push_up(int index) {
-		int ls=ls(index),rs=rs(index);
-		size(index)=size(ls)+size(rs)+1;
-	}
+	void push_up(int x) {size(x)=size(ls(x))+size(rs(x))+1;}
 	int newnode(int val) {
 		int now;
 		if(!Q.empty()) {
@@ -57,32 +38,29 @@ struct Treap {
 		size(now)=1;
 		return now;
 	}
-	void rotate(int& index,bool side) {
-		int son=tree[index].child[side^1];
-		tree[index].child[side^1]=tree[son].child[side];
-		tree[son].child[side]=index;
-		push_up(index);
-		push_up(son);
-		index=son;
+	void rotate(int& x,bool side) {
+		int y=tree[x].child[side^1];
+		tree[x].child[side^1]=tree[y].child[side];
+		tree[y].child[side]=x;
+		push_up(x);
+		push_up(y);
+		x=y;
 	}
-	void insert(int& index,int val) {
-		if(!index) {
-			index=newnode(val);
-			return;
-		}
-		bool side=val>val(index);
-		int &son=tree[index].child[side];
-		insert(son,val);
-		size(index)++;
-		if(d(index)<d(son))rotate(index,side^1);
+	void insert(int& x,int v) {
+		if(!x) {x=newnode(v);return;}
+		bool side=v>val(x);
+		int &y=tree[x].child[side];
+		insert(y,v);
+		size(x)++;
+		if(d(x)<d(y))rotate(x,side^1);
 	}
 	int cnt,a[maxn];
-	void dfs(int index) {
-		if(!index)return;
-		if(ls(index))dfs(ls(index));
-		a[++cnt]=val(index);
-		Q.push(index);
-		if(rs(index))dfs(rs(index));
+	void dfs(int x) {
+		if(!x)return;
+		if(ls(x))dfs(ls(x));
+		a[++cnt]=val(x);
+		Q.push(x);
+		if(rs(x))dfs(rs(x));
 	}
 	int build(int Left,int Right) {
 		if(Left>Right)return 0;
@@ -92,34 +70,31 @@ struct Treap {
 		push_up(now);
 		return now;
 	}
-	int rebuild(int index) {
+	int rebuild(int x) {
 		cnt=0;
-		dfs(ls(index));
-		dfs(rs(index));
+		dfs(ls(x));
+		dfs(rs(x));
 		int pos=build(1,cnt);
 		return pos;
 	}
 	void remove(int val) {
-		int now=root,father;
+		int now=root,fa;
 		bool side;
 		while(val(now)!=val) {
-			father=now;
+			fa=now;
 			size(now)--;
 			if(val<val(now))now=ls(now),side=0;
 			else now=rs(now),side=1;
 		}
 		int pos=rebuild(now);
-		if(now!=root)tree[father].child[side]=pos;
+		if(now!=root)tree[fa].child[side]=pos;
 		else root=pos;
 	}
 	int rank(int val) {
 		int now=root,ans=0;
 		while(now) {
 			if(val<=val(now))now=ls(now);
-			else {
-				ans+=size(ls(now))+1;
-				now=rs(now);
-			}
+			else {ans+=size(ls(now))+1;now=rs(now);}
 		}
 		return ans+1;
 	}
@@ -136,7 +111,7 @@ struct Treap {
 		return -1;
 	}
 	int pre(int num) {
-		int now=root,ans=-INT_MAX;
+		int now=root,ans=INT_MIN;
 		while(now) {
 			if(val(now)<num)ans=max(ans,val(now)),now=rs(now);
 			else now=ls(now);
@@ -156,4 +131,4 @@ struct Treap {
 int main() {
 	
 	return 0;
-} 
+}

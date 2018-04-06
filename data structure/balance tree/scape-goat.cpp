@@ -1,69 +1,43 @@
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<cstring>
-#include<cstdlib>
-#include<climits>
-#include<vector>
-#include<cstdio>
-#include<cmath>
-#include<queue>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-inline const int Get_Int() {
+inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
-	while(x<'0'||x>'9') {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(x>='0'&&x<='9') {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
 
 const int maxn=100005;
 
-struct Tree {
-	int child[2],father;
-	int size,val;
-	Tree() {}
-	Tree(int l,int r,int f,int s,int v):father(f),size(s),val(v) {
-		child[0]=l;
-		child[1]=r;
-	}
-};
-
 struct ScapeGoat_Tree {
+	struct Tree {
+		int child[2],father;
+		int size,val;
+		Tree(int l=0,int r=0,int f=0,int s=0,int v=0):father(f),size(s),val(v) {child[0]=l,child[1]=r;}
+	} tree[maxn];
 	const double alpha=0.7;
-	Tree tree[maxn];
 	int root,size;
-	#define ls(x) tree[x].child[0]
-	#define rs(x) tree[x].child[1]
-	#define fa(x) tree[x].father
-	#define val(x) tree[x].val
-	#define size(x) tree[x].size
+#define ls(x) tree[x].child[0]
+#define rs(x) tree[x].child[1]
+#define fa(x) tree[x].father
+#define val(x) tree[x].val
+#define size(x) tree[x].size
 	ScapeGoat_Tree() {
-		tree[++size]=Tree(0,2,0,2,-INT_MAX);
+		tree[++size]=Tree(0,2,0,2,INT_MIN);
 		tree[++size]=Tree(0,0,1,1,INT_MAX);
 		root=1;
 	}
-	bool balance(int index) {
-		return size(index)*alpha>=max(size(ls(index)),size(rs(index)));
-	}
-	bool checkson(int index) {
-		return rs(fa(index))==index;
-	}
-	void push_up(int index) {
-		size(index)=size(ls(index))+1+size(rs(index));
-	}
+	bool balance(int x) {return size(x)*alpha>=max(size(ls(x)),size(rs(x)));}
+	bool checkson(int x) {return rs(fa(x))==x;}
+	void push_up(int x) {size(x)=size(ls(x))+1+size(rs(x));}
 	int cnt,a[maxn];
-	void dfs(int index) {
-		if(ls(index))dfs(ls(index));
-		a[++cnt]=index;
-		if(rs(index))dfs(rs(index));
+	void dfs(int x) {
+		if(ls(x))dfs(ls(x));
+		a[++cnt]=x;
+		if(rs(x))dfs(rs(x));
 	}
 	int build(int Left,int Right) {
 		if(Left>Right)return 0;
@@ -74,41 +48,40 @@ struct ScapeGoat_Tree {
 		push_up(pos);
 		return pos;
 	}
-	void rebuild(int index) {
+	void rebuild(int x) {
 		cnt=0;
-		dfs(index);
-		int father=fa(index),side=checkson(index);
+		dfs(x);
+		int f=fa(x),side=checkson(x);
 		int pos=build(1,cnt);
-		tree[father].child[side]=pos;
-		fa(pos)=father;
-		if(index==root)root=pos;
+		tree[f].child[side]=pos;
+		fa(pos)=f;
+		if(x==root)root=pos;
 	}
 	void insert(int v) {
-		int now=root,father=0;
+		int now=root,fa=0;
 		while(now) {
-			father=now;
-			size(father)++;
+			fa=now;
+			size(fa)++;
 			now=tree[now].child[val(now)<=v];
 		}
-		tree[now=++size]=Tree(0,0,father,1,v);
-		if(father)tree[father].child[val(father)<=v]=now;
+		tree[now=++size]=Tree(0,0,fa,1,v);
+		if(fa)tree[fa].child[val(fa)<=v]=now;
 		int pos=0;
-		for(int i=now; i; i=fa(i))
-			if(!balance(i))pos=i;
+		for(int i=now; i; i=fa(i))if(!balance(i))pos=i;
 		if(pos)rebuild(pos);
 	}
-	void remove(int index) {
-		if(ls(index)&&rs(index)) {
-			int pre=ls(index);
+	void remove(int x) {
+		if(ls(x)&&rs(x)) {
+			int pre=ls(x);
 			while(rs(pre))pre=rs(pre);
-			val(index)=val(pre); //Ç°Çý¸´ÖÆ
-			index=pre; //É¾³ýÇ°Çý
+			val(x)=val(pre);
+			x=pre;
 		}
-		int son=ls(index)?ls(index):rs(index),side=checkson(index);
-		tree[fa(index)].child[side]=son;
-		fa(son)=fa(index);
-		for(int i=fa(index); i; i=fa(i))size(i)--;
-		if(index==root)root=son;
+		int son=ls(x)?ls(x):rs(x),side=checkson(x);
+		tree[fa(x)].child[side]=son;
+		fa(son)=fa(x);
+		for(int i=fa(x); i; i=fa(i))size(i)--;
+		if(x==root)root=son;
 	}
 	int find(int v) {
 		int now=root;
@@ -122,10 +95,7 @@ struct ScapeGoat_Tree {
 		int now=root,ans=0;
 		while(now) {
 			if(v<=val(now))now=ls(now);
-			else {
-				ans+=size(ls(now))+1;
-				now=rs(now);
-			}
+			else {ans+=size(ls(now))+1;now=rs(now);}
 		}
 		return ans;
 	}
@@ -143,7 +113,7 @@ struct ScapeGoat_Tree {
 		return -1;
 	}
 	int pre(int num) {
-		int now=root,ans=-INT_MAX;
+		int now=root,ans=INT_MIN;
 		while(now) {
 			if(val(now)<num)ans=max(ans,val(now)),now=rs(now);
 			else now=ls(now);
