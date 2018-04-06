@@ -5,14 +5,8 @@ using namespace std;
 inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
-	while(!isdigit(x)) {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(isdigit(x)) {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
 
@@ -27,7 +21,7 @@ struct LeftSideTree { //root is interface
 	int newnode(int v) {tree[++size]=Tree(0,0,v,0);return size;}
 	int merge(int x,int y) {
 		if(!x||!y)return x+y;
-		if(tree[x].val<tree[y].val)swap(x,y); //big root
+		if(tree[x].val<tree[y].val)swap(x,y); //big root root
 		int now=++size;tree[now]=tree[x];
 		tree[now].rs=merge(tree[now].rs,y);
 		if(tree[tree[now].rs].dist>tree[tree[now].ls].dist)swap(tree[now].ls,tree[now].rs);
@@ -40,7 +34,6 @@ struct LeftSideTree { //root is interface
 		return merge(l,r);
 	}
 };
-
 
 int main() {
 
