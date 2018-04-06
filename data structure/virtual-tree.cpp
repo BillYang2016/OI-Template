@@ -24,7 +24,7 @@ inline const int Get_Int() {
 	return num*bj;
 }
 
-void build(vector<int>& a) {
+void build(vector<int> &a) {
 	int tmp=a.size();
 	for(int i=0; i<tmp-1; i++)a.push_back(LCA(a[i],a[i+1]));
 	sort(a.begin(),a.end(),cmp);

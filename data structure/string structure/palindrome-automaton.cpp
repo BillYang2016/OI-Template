@@ -56,9 +56,7 @@ struct Palindsome_Automaton {
 		}
 		last=child[p][data];
 	}
-	void build(string s) {
-		for(auto x:s)insert(x-'a');
-	}
+	void build(string s) {for(auto x:s)insert(x-'a');}
 };
 
 int main() {
