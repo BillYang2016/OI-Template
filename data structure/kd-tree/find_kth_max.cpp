@@ -77,7 +77,6 @@ struct KD_Tree {
 	}
 };
 
-
 int main() {
 	
 	return 0;
