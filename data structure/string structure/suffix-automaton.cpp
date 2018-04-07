@@ -58,14 +58,14 @@ struct Suffix_Automaton {
 	}
 	void build(string s) {for(auto x:s)insert(x-'a');}
 	int run(string s) {
-		int ans=0,len=0,p=root;
-		for(int x:s) {
+		int p=root,len=0,ans=0;
+		for(auto x:s) {
 			int ch=x-'a';
-			if(child[p][ch])p=child[p][ch],len++;
+			if(child[p][ch])len++,p=child[p][ch];
 			else {
 				while(p&&!child[p][ch])p=next[p];
-				if(!p) {len=0,p=root;}
-				else {len=Max[p]+1,p=child[p][ch];}
+				if(!p)len=0,p=root;
+				else len=Max[p]+1,p=child[p][ch];
 			}
 			ans=max(ans,len);
 		}
