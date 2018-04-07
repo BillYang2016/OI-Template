@@ -42,8 +42,7 @@ struct Treap {
 		int y=tree[x].child[side^1];
 		tree[x].child[side^1]=tree[y].child[side];
 		tree[y].child[side]=x;
-		push_up(x);
-		push_up(y);
+		push_up(x),push_up(y);
 		x=y;
 	}
 	void insert(int& x,int v) {
