@@ -25,6 +25,7 @@ Bill Yang's algorithm &amp; data structure templates
 - [x] link-cut-tree
 - [x] virtual-tree
 - [x] left-side-tree
+- [x] kd-tree
 ## Math Theories
 ### Transforms
 - [x] fast-fourier-transform
