@@ -69,6 +69,13 @@ namespace Suffix_Array {
 			height[rk[i]]=k;
 		}
 	}
+
+	void discretization(int n,int *a,int *b) {
+		copy(a+1,a+n+1,b+1);
+		sort(a+1,a+n+1);
+		int tot=unique(a+1,a+n+1)-a-1;
+		for(int i=1; i<=n; i++)b[i]=lower_bound(a+1,a+tot+1,b[i])-a;
+	}
 }
 
 using namespace Suffix_Array;
