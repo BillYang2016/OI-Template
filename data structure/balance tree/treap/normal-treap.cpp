@@ -61,11 +61,11 @@ struct Treap {
 		Q.push(x);
 		if(rs(x))dfs(rs(x));
 	}
-	int build(int Left,int Right) {
-		if(Left>Right)return 0;
-		int mid=(Left+Right)>>1,now=newnode(a[mid]);
-		ls(now)=build(Left,mid-1);
-		rs(now)=build(mid+1,Right);
+	int build(int l,int r) {
+		if(l>r)return 0;
+		int mid=(l+r)>>1,now=newnode(a[mid]);
+		ls(now)=build(l,mid-1);
+		rs(now)=build(mid+1,r);
 		push_up(now);
 		return now;
 	}
@@ -73,8 +73,7 @@ struct Treap {
 		cnt=0;
 		dfs(ls(x));
 		dfs(rs(x));
-		int pos=build(1,cnt);
-		return pos;
+		return build(1,cnt);
 	}
 	void remove(int val) {
 		int now=root,fa;
@@ -102,7 +101,7 @@ struct Treap {
 		while(now>0&&rank>=0) {
 			if(ls(now)&&size(ls(now))>=rank)now=ls(now);
 			else {
-				if(rank<=size(ls(now))+1)return now;
+				if(rank==size(ls(now))+1)return now;
 				rank-=size(ls(now))+1;
 				now=rs(now);
 			}
