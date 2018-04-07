@@ -18,7 +18,7 @@ int D;
 
 struct Point {
 	int d[K],Min[K],Max[K];
-	int ls,rs;
+	int l,r;
 	int& operator [] (int x) {return d[x];}
 	bool operator < (const Point& b) const {return d[D]<b.d[D];}
 } p[maxn];
@@ -26,27 +26,23 @@ struct Point {
 LL ans=0; //remember sqrt
 
 struct KD_Tree {
-#define lson p[index].ls
-#define rson p[index].rs
+#define ls p[index].l
+#define rs p[index].r
+#define Min(i) p[index].Min[i]
+#define Max(i) p[index].Max[i]
 	void push_up(int index) {
 		for(int i=0; i<K; i++) {
-			p[index].Min[i]=p[index].Max[i]=p[index][i];
-			if(lson) {
-				p[index].Min[i]=min(p[index].Min[i],p[lson].Min[i]);
-				p[index].Max[i]=max(p[index].Max[i],p[lson].Max[i]);
-			}
-			if(rson) {
-				p[index].Min[i]=min(p[index].Min[i],p[rson].Min[i]);
-				p[index].Max[i]=max(p[index].Max[i],p[rson].Max[i]);
-			}
+			Min(i)=Max(i)=p[index][i];
+			if(ls)Min(i)=min(Min(i),p[ls].Min[i]),Max(i)=max(Max(i),p[ls].Max[i]);
+			if(rs)Min(i)=min(Min(i),p[rs].Min[i]),Max(i)=max(Max(i),p[rs].Max[i]);
 		}
 	}
 	int build(int Left,int Right,int now) {
 		int mid=(Left+Right)>>1,root=mid;
 		D=now;
 		nth_element(p+Left,p+mid,p+Right+1);
-		if(Left<mid)p[root].ls=build(Left,mid-1,(now+1)%K);
-		if(Right>mid)p[root].rs=build(mid+1,Right,(now+1)%K);
+		if(Left<mid)p[root].l=build(Left,mid-1,(now+1)%K);
+		if(Right>mid)p[root].r=build(mid+1,Right,(now+1)%K);
 		push_up(root);
 		return root;
 	}
@@ -55,8 +51,8 @@ struct KD_Tree {
 		if(!index)return LLONG_MAX/2;
 		LL ans=0;
 		for(int i=0; i<K; i++) {
-			if(p[index].Min[i]-P[i]>0)ans+=sqr(p[index].Min[i]-P[i]);
-			if(P[i]-p[index].Max[i]>0)ans+=sqr(P[i]-p[index].Max[i]);
+			if(Min(i)-P[i]>0)ans+=sqr(Min(i)-P[i]);
+			if(P[i]-Max(i)>0)ans+=sqr(P[i]-Max(i));
 		}
 		return ans;
 	}
@@ -69,13 +65,13 @@ struct KD_Tree {
 		if(!index)return;
 		LL Dist=dist(p[index],P);
 		ans=min(ans,Dist);
-		LL ldist=get_min(lson,P),rdist=get_min(rson,P);
+		LL ldist=get_min(ls,P),rdist=get_min(rs,P);
 		if(ldist<rdist) {
-			if(ldist<ans)find_min(lson,P,(now+1)%K);
-			if(rdist<ans&&P[now]+ans>=p[index][now])find_min(rson,P,(now+1)%K);
+			if(ldist<ans)find_min(ls,P,(now+1)%K);
+			if(rdist<ans&&P[now]+ans>=p[index][now])find_min(rs,P,(now+1)%K);
 		} else {
-			if(rdist<ans)find_min(rson,P,(now+1)%K);
-			if(ldist<ans&&P[now]-ans<=p[index][now])find_min(lson,P,(now+1)%K);
+			if(rdist<ans)find_min(rs,P,(now+1)%K);
+			if(ldist<ans&&P[now]-ans<=p[index][now])find_min(ls,P,(now+1)%K);
 		}
 	}
 };
