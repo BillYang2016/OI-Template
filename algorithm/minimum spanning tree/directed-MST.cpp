@@ -32,26 +32,19 @@ struct Edge {
 	Edge(int x=0,int y=0,double v=0):from(x),to(y),dist(v) {}
 };
  
-double Directed_MST(int n,vector<Edge>edges,int root) {
+double Directed_MST(int n,vector<Edge> &edges,int root) {
 	double ans=0;
 	static double in[maxn];
 	static int id[maxn],pre[maxn],vst[maxn];
 	while(true) {
 		//找最小入边
 		for(int i=1; i<=n; i++)in[i]=1e18;
-		for(int i=0; i<edges.size(); i++) {
-			Edge& e=edges[i]; 
+		for(Edge &e:edges) {
 			int x=e.from,y=e.to;
 			if(x==y)continue;
-			if(e.dist<in[y]) {
-				pre[y]=x;
-				in[y]=e.dist;
-			}
+			if(e.dist<in[y])pre[y]=x,in[y]=e.dist;
 		}
-		for(int i=1; i<=n; i++) {
-			if(i==root)continue;
-			if(in[i]==1e18)return -1; //无解
-		}
+		for(int i=1; i<=n; i++)if(i!=root&&in[i]==1e18)return -1; //无解
 		//找环
 		memset(id,0,sizeof(id));
 		memset(vst,0,sizeof(vst));
@@ -67,14 +60,11 @@ double Directed_MST(int n,vector<Edge>edges,int root) {
 			}
 		}
 		if(cnt==0)break; //无环
-		for(int i=1; i<=n; i++)
-			if(!id[i])id[i]=++cnt;
-		for(int i=0; i<edges.size(); i++) {
-			Edge& e=edges[i]; 
+		for(int i=1; i<=n; i++)if(!id[i])id[i]=++cnt;
+		for(Edge &e:edges) {
 			int &x=e.from,&y=e.to;
 			if(x!=y)e.dist-=in[y];
-			x=id[x];
-			y=id[y];
+			x=id[x],y=id[y];
 		}
 		n=cnt;
 		root=id[root];
