@@ -18,9 +18,11 @@ Bill Yang's algorithm &amp; data structure templates
 - [x] scape-goat tree
 ### String Structures
 - [x] suffix-automaton
-- [x] aho_corasick-automaton
-- [x] palindrome-automaton
 - [x] suffix-array
+- [x] KMP
+- [x] aho_corasick-automaton
+- [x] manacher
+- [x] palindrome-automaton
 ### Others
 - [x] link-cut-tree
 - [x] virtual-tree
