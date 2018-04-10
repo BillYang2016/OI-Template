@@ -1,29 +1,12 @@
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<cstring>
-#include<cstdlib>
-#include<climits>
-#include<vector>
-#include<cstdio>
-#include<cmath>
-#include<queue>
-#include<map>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-typedef long long LL;
-
-inline const LL Get_Int() {
-	LL num=0,bj=1;
+inline int Get_Int() {
+	int num=0,bj=1;
 	char x=getchar();
-	while(x<'0'||x>'9') {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(x>='0'&&x<='9') {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
 
@@ -48,7 +31,7 @@ LL inv(LL a,LL p) {
 LL BSGS(LL a,LL b,LL p) {
 	a%=p;
 	if(a==0)return b==0?1:-1;
-	static map<LL,LL>M;
+	static map<LL,LL> M;
 	M.clear();
 	LL mid=ceil(sqrt(p)),sum=1;
 	for(int i=0; i<mid; i++) {
