@@ -2,6 +2,8 @@
 
 using namespace std;
 
+typedef long long LL;
+
 inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
