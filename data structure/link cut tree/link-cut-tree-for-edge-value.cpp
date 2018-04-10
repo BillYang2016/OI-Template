@@ -63,15 +63,10 @@ struct Link_Cut_Tree {
 	void split(int x,int y) {make_root(x);access(y);splay(y);}
 	void link(int x,int y) {make_root(x);fa(x)=y;} //y->x
 	void link(int id,int x,int y,int val) {link(x,id),link(id,y);tree[id]=Tree(val);} //id for edge
-	void cut(int x,int y) {split(x,y);ls(y)=fa(x)=0;}
+	void cut(int x,int y) {split(x,y);if(x!=pre(y))return;ls(y)=fa(x)=0;}
 	int pre(int x) {x=ls(x);while(rs(x))x=rs(x);return x;}
 	void modify(int x,int v) {splay(x);tree[x].val=v;push_up(x);}
-	int get_root(int x) {
-		access(x);
-		splay(x);
-		while(ls(x))x=ls(x);
-		return x;
-	}
+	int get_root(int x) {access(x);splay(x);while(ls(x))x=ls(x);return x;}
 } lct;
 
 int main() {
