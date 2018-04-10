@@ -13,16 +13,16 @@ inline int Get_Int() {
 //Need to reference BSGS
 
 LL ExBSGS(LL a,LL b,LL p) {
-	LL gcd,c=0;
+	LL gcd,cnt=0;
 	while((gcd=__gcd(a,p))!=1) {
-		if(b==1)return c;
+		if(b==1)return cnt;
 		if(b%gcd)return -1;
 		p/=gcd;
 		b=b/gcd*inv(a/gcd,p)%p;
-		c++;
+		cnt++;
 	}
 	LL ans=BSGS(a,b,p);
-	return ans==-1?-1:ans+c;
+	return ans==-1?-1:ans+cnt;
 }
 
 int main() {
