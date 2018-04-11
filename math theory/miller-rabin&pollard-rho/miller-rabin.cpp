@@ -26,22 +26,21 @@ inline const int Get_Int() {
 	return num*bj;
 }
 
+const int TIMES=10;
+
 LL Quick_Pow(LL a,LL b,LL p) {
 	LL sum=1;
 	for(; b; b>>=1,a=a*a%p)if(b&1)sum=sum*a%p;
 	return sum;
 }
 
-const int TIMES=10; 
 mt19937 g(rand());
 
 bool Witness(LL a,LL n) {
 	LL u=n-1,t=0;
 	while(u%2==0)t++,u>>=1;
 	LL x=Quick_Pow(a,u,n);
-	if(x==1)return false;
-	for(int i=1; i<=t; i++,x=x*x%n)
-		if(x!=n-1&&x!=1&&x*x%n==1)return true;
+	for(int i=1; i<=t&&x!=1; i++,x=x*x%n)if(x!=n-1&&x*x%n==1)return true;
 	return x!=1;
 }
 
