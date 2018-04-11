@@ -37,10 +37,11 @@ Bill Yang's algorithm &amp; data structure templates
 - [x] quick_pow
 - [x] baby-step-giant-step
 - [x] exgcd
+- [x] chinese-remainder-theorem
+- [x] gauss
 - [x] liner sieves
 - [x] miller-rabin
 - [x] pollard-rho
-- [x] gauss
 
 # OI blog
 you can visit [my blog](https://blog.bill.moe) to find more OI study notes.
