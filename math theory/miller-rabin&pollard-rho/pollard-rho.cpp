@@ -46,21 +46,18 @@ bool Witness(LL a,LL n) {
 	LL u=n-1,t=0;
 	while(u%2==0)t++,u>>=1;
 	LL x=Quick_Pow(a,u,n);
-	if(x==1)return false;
-	for(int i=1; i<=t; i++,x=Quick_Mul(x,x,n))
-		if(x!=n-1&&x!=1&&Quick_Mul(x,x,n)==1)return true;
+	for(int i=1; i<=t&&x!=1; i++,x=Quick_Mul(x,x,n))if(x!=n-1&&Quick_Mul(x,x,n)==1)return true;
 	return x!=1;
 }
 
 bool Miller_Rabin(LL n) {
 	if(n==2)return true;
 	if(n<2||!(n&1))return false;
-	for(int i=1; i<=TIMES; i++)
-		if(Witness(g()%(n-1)+1,n))return false;
+	for(int i=1; i<=TIMES; i++)if(Witness(g()%(n-1)+1,n))return false;
 	return true;
 }
 
-LL Pollar_Rho(LL n) {
+LL Pollard_Rho(LL n) {
 	if(!(n&1))return 2;
 	while(true) {
 		LL a=g()%(n-1)+1,b=a,c=g()%(n-1)+1;
@@ -78,7 +75,7 @@ LL Pollar_Rho(LL n) {
 
 LL Find_Fac(LL n) { //minimum factor
 	if(Miller_Rabin(n))return n;
-	LL p=Pollar_Rho(n);
+	LL p=Pollard_Rho(n);
 	return min(Find_Fac(p),Find_Fac(n/p));
 }
 
