@@ -54,7 +54,7 @@ struct NumberTheoreticTransform {
 		int k=log2(n);
 		for(int i=0; i<n; i++) { //reverse bit position
 			int t=0;
-			for(int j=0; j<k; j++)if(i&(1<<j))t|=1<<(k-j-1);
+			for(int j=0; j<k; j++)if(i>>j&1)t|=1<<(k-j-1);
 			rev[i]=t;
 		}
 	}
