@@ -12,10 +12,7 @@ inline int Get_Int() {
 
 const double eps=1e-8;
 
-int dcmp(double x) {
-	if(fabs(x)<=eps)return 0;
-	return x>eps?1:-1;
-}
+int dcmp(double x) {return fabs(x)<=eps?0:x>eps?1:-1;}
 
 struct Point {
 	double x,y;
