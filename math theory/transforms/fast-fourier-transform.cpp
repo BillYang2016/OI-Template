@@ -1,32 +1,16 @@
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<cstring>
-#include<complex>
-#include<cstdlib>
-#include<climits>
-#include<complex>
-#include<vector>
-#include<cstdio>
-#include<cmath>
-#include<queue>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-#define cp complex<double>
-
-inline const int Get_Int() {
+inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
-	while(x<'0'||x>'9') {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(x>='0'&&x<='9') {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
+
+#define cp comple<double>
 
 const int maxn=131072+5;
 const double pi=acos(-1);
@@ -49,7 +33,7 @@ struct FastFourierTransform {
 	}
 	void transform(cp *a,cp *omega) {
 		for(int i=0; i<n; i++)if(i<rev[i])swap(a[i],a[rev[i]]); //no double reversion
-		for(int len=2; len<=n; len*=2) {
+		for(int len=2; len<=n; len<<=1) {
 			int mid=len>>1;
 			for(cp *p=a; p!=a+n; p+=len)
 				for(int i=0; i<mid; i++) {
@@ -59,9 +43,7 @@ struct FastFourierTransform {
 				}
 		}
 	}
-	void dft(cp *a) {
-		transform(a,omega);
-	}
+	void dft(cp *a) {transform(a,omega);}
 	void idft(cp *a) {
 		transform(a,iomega);
 		for(int i=0; i<n; i++)a[i]/=n;

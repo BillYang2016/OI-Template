@@ -1,31 +1,16 @@
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<cstring>
-#include<complex>
-#include<cstdlib>
-#include<climits>
-#include<vector>
-#include<cstdio>
-#include<cmath>
-#include<queue>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-typedef long long LL;
-
-inline const int Get_Int() {
+inline int Get_Int() {
 	int num=0,bj=1;
 	char x=getchar();
-	while(x<'0'||x>'9') {
-		if(x=='-')bj=-1;
-		x=getchar();
-	}
-	while(x>='0'&&x<='9') {
-		num=num*10+x-'0';
-		x=getchar();
-	}
+	while(!isdigit(x)) {if(x=='-')bj=-1;x=getchar();}
+	while(isdigit(x)) {num=num*10+x-'0';x=getchar();}
 	return num*bj;
 }
+
+typedef long long LL;
 
 const int maxn=131072+5;
 const LL mod=998244353;
@@ -37,9 +22,7 @@ LL Quick_Pow(LL a,LL b) {
 	return sum;
 }
 
-LL inv(LL x) {
-	return Quick_Pow(x,mod-2);
-}
+LL inv(LL x) {return Quick_Pow(x,mod-2);}
 
 vector<int> ppt;
 
@@ -81,7 +64,7 @@ struct NumberTheoreticTransform {
 	}
 	void transform(LL *a,LL *omega) {
 		for(int i=0; i<n; i++)if(i<rev[i])swap(a[i],a[rev[i]]); //no double reversion
-		for(int len=2; len<=n; len*=2) {
+		for(int len=2; len<=n; len<<=1) {
 			int mid=len>>1;
 			for(LL *p=a; p!=a+n; p+=len)
 				for(int i=0; i<mid; i++) {
@@ -91,9 +74,7 @@ struct NumberTheoreticTransform {
 				}
 		}
 	}
-	void dft(LL *a) {
-		transform(a,omega);
-	}
+	void dft(LL *a) {transform(a,omega);}
 	void idft(LL *a) {
 		transform(a,iomega);
 		LL x=inv(n);
