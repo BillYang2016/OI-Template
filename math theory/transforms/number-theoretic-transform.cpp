@@ -35,11 +35,7 @@ void find_root(LL x) {
 		}
 	for(g=2; g<x; g++) {
 		bool bj=1;
-		for(int t:ppt)
-			if(Quick_Pow(g,(x-1)/t)==1) {
-				bj=0;
-				break;
-			}
+		for(int t:ppt)if(Quick_Pow(g,(x-1)/t)==1) {bj=0;break;}
 		if(bj)return;
 	}
 }
