@@ -11,6 +11,7 @@ inline int Get_Int() {
 }
 
 const int maxn=100005;
+
 mt19937 g(rand());
  
 struct Treap {
@@ -38,28 +39,27 @@ struct Treap {
 		size(now)=1;
 		return now;
 	}
-	void rotate(int& x,bool side) {
-		int y=tree[x].child[side^1];
-		tree[x].child[side^1]=tree[y].child[side];
+	void rotate(int &x,bool side) {
+		int y=tree[x].child[!side];
+		tree[x].child[!side]=tree[y].child[side];
 		tree[y].child[side]=x;
 		push_up(x),push_up(y);
 		x=y;
 	}
-	void insert(int& x,int v) {
+	void insert(int &x,int v) {
 		if(!x) {x=newnode(v);return;}
 		bool side=v>val(x);
 		int &y=tree[x].child[side];
 		insert(y,v);
 		size(x)++;
-		if(d(x)<d(y))rotate(x,side^1);
+		if(d(x)<d(y))rotate(x,!side);
 	}
 	int cnt,a[maxn];
 	void dfs(int x) {
 		if(!x)return;
-		if(ls(x))dfs(ls(x));
-		a[++cnt]=val(x);
-		Q.push(x);
-		if(rs(x))dfs(rs(x));
+		dfs(ls(x));
+		a[++cnt]=val(x),Q.push(x);
+		dfs(rs(x));
 	}
 	int build(int l,int r) {
 		if(l>r)return 0;
@@ -92,14 +92,14 @@ struct Treap {
 		int now=root,ans=0;
 		while(now) {
 			if(val<=val(now))now=ls(now);
-			else {ans+=size(ls(now))+1;now=rs(now);}
+			else ans+=size(ls(now))+1,now=rs(now);
 		}
 		return ans+1;
 	}
 	int kth(int rank) {
 		int now=root;
-		while(now>0&&rank>=0) {
-			if(ls(now)&&size(ls(now))>=rank)now=ls(now);
+		while(now&&rank) {
+			if(rank<=size(ls(now)))now=ls(now);
 			else {
 				if(rank==size(ls(now))+1)return now;
 				rank-=size(ls(now))+1;
