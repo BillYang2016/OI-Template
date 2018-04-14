@@ -51,8 +51,7 @@ struct MinimumCost_MaximumFlow { //EK Edition
 	}
 	bool bellmanford(int s,int t,int& flow,int& cost) {
 		for(int i=1; i<=n; i++)dist[i]=INT_MAX;
-		memset(inque,0,sizeof(inque));
-		queue<int>Q;
+		queue<int> Q;
 		Q.push(s);
 		dist[s]=path[s]=0;
 		a[s]=INT_MAX;
