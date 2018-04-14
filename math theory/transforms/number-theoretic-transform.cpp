@@ -45,11 +45,11 @@ struct NumberTheoreticTransform {
 	LL omega[maxn],iomega[maxn];
 	void init(int n) {
 		this->n=n;
-		int x=Quick_Pow(g,(mod-1)/n);
+		LL x=Quick_Pow(g,(mod-1)/n),y=inv(x);
 		omega[0]=iomega[0]=1;
 		for(int i=1; i<n; i++) {
 			omega[i]=omega[i-1]*x%mod;
-			iomega[i]=inv(omega[i]);
+			iomega[i]=iomega[i-1]*y%mod;
 		}
 		int k=log2(n);
 		for(int i=0; i<n; i++) { //reverse bit position
