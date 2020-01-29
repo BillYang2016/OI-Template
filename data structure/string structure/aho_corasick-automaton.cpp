@@ -24,17 +24,19 @@ inline const int Get_Int() {
 	return num*bj;
 }
 
-const int maxn=500005;
+const int maxn=200005;
 
 struct Aho_Corasick_Automaton {
 	struct Tree {
 		int child[26];
-		int fail,cnt;
-		void clear() {fill(child,child+26,0);fail=cnt=0;}
+		int fail,cnt,next;
+		bool flag;
+		void clear() {fill(child,child+26,0);fail=cnt=flag=next=0;}
 	} tree[maxn];
 	int cnt;
 #define ch(x,i) tree[x].child[i]
 #define fail(x) tree[x].fail
+#define next(x) tree[x].next
 	Aho_Corasick_Automaton() {init();}
 	void init() {tree[cnt=0].clear();}
 	int newnode() {tree[++cnt].clear();return cnt;}
@@ -46,6 +48,7 @@ struct Aho_Corasick_Automaton {
 			now=ch(now,j);
 		}
 		tree[now].cnt++;
+		tree[now].flag=1;
 	}
 	void buildfail() {
 		queue<int> Q;
@@ -54,11 +57,15 @@ struct Aho_Corasick_Automaton {
 			int now=Q.front();
 			Q.pop();
 			for(int i=0; i<26; i++) {
-				int &next=ch(now,i);
-				if(next) {
-					if(now)fail(next)=ch(fail(now),i);
-					Q.push(next);
-				} else next=ch(fail(now),i);
+				int &son=ch(now,i);
+				if(!son) {
+					son=ch(fail(now),i);
+					continue;
+				}
+				fail(son)=fail(now)?ch(fail(now),i):0;
+				tree[son].flag|=tree[fail(son)].flag;
+				next(son)=tree[fail(son)].cnt?fail(son):next(fail(son));
+				Q.push(son);
 			}
 		}
 	}
@@ -67,7 +74,7 @@ struct Aho_Corasick_Automaton {
 		for(auto x:s) {
 			int j=x-'a';
 			now=ch(now,j);
-			for(int j=now; j; j=fail(j))ans+=tree[j].cnt,tree[j].cnt=0;
+			for(int j=now; j; j=next(j))ans+=tree[j].cnt,tree[j].cnt=0;
 		}
 		return ans;
 	}
