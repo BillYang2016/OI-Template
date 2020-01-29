@@ -59,10 +59,10 @@ struct Aho_Corasick_Automaton {
 			for(int i=0; i<26; i++) {
 				int &son=ch(now,i);
 				if(!son) {
-					son=ch(fail(now),i);
+					son=now?ch(fail(now),i):0;
 					continue;
 				}
-				fail(son)=fail(now)?ch(fail(now),i):0;
+				fail(son)=now?ch(fail(now),i):0;
 				tree[son].flag|=tree[fail(son)].flag;
 				next(son)=tree[fail(son)].cnt?fail(son):next(fail(son));
 				Q.push(son);
