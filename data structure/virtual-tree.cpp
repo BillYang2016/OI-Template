@@ -24,13 +24,17 @@ inline const int Get_Int() {
 	return num*bj;
 }
 
+bool cmp(int a,int b) {return First[a]<First[b];}
+
 void build(vector<int> &a) {
 	int tmp=a.size();
+	sort(a.begin(),a.end(),cmp);
 	for(int i=0; i<tmp-1; i++)a.push_back(LCA(a[i],a[i+1]));
 	sort(a.begin(),a.end(),cmp);
 	auto it=unique(a.begin(),a.end());
 	a.erase(it,a.end());
-	static int top=0,S[maxn];
+	int top=0;
+	static int S[maxn];
 	root=S[++top]=a[0];
 	for(int i=1; i<a.size(); i++) {
 		int now=a[i];
