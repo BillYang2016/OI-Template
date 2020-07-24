@@ -10,7 +10,7 @@ inline int Get_Int() {
 	return num*bj;
 }
 
-#define cp comple<double>
+#define cp complex<double>
 
 const int maxn=131072+5;
 const double pi=acos(-1);
