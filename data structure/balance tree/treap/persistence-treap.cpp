@@ -76,7 +76,11 @@ struct Treap { //root is interface
 		pii tmp=split(x,k-1);
 		return merge(merge(tmp.first,newnode(v)),tmp.second);
 	}
-	int remove(int x,int k) {return merge(split(x,k-1).first,split(x,k).second);}
+	int remove(int x,int k) {
+		pii a=split(x,k-1);
+		pii b=split(a.second,1);
+		return merge(a.first,b.second);
+	}
 } treap;
 
 int main() {
